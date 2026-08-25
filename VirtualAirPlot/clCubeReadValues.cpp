@@ -449,7 +449,7 @@ void clCubeReadValues::slotDoIt()
 		float loLenght_beacon03_sensor02;
 		QString loName_sensor02;
 
-		//bool loDoQuery = true;
+		bool loDoQuery = true;
 
 
 		if ((meSocketToBeacon_beacon01 != NULL) && (meSocketToBeacon_beacon02 != NULL) && (meSocketToBeacon_beacon03 != NULL))
