@@ -3,3 +3,11 @@ Scons version
 sudo apt install pip
 mv /usr/lib/python3.13/EXTERNALLY-MANAGED /home/zolly/Documents
 python3 -m pip install scons==4.2.0
+
+QT
+------
+sudo apt-get install qtdeclarative5-dev qml-module-qtquick-controls
+sudo apt install designer-qt6
+sudo apt install qt5*
+sudo apt install libqt53*
+sudo apt install qt3*
