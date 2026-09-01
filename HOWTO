@@ -28,7 +28,7 @@ import database into existing db
 
 This project is connected to the Anchor Arduino
 -----------------------------------------------
-TAG and ANCHOR are form the library's with calibration function added to the ANCHOR.
+TAG and ANCHOR are from the library's with calibration function added to the ANCHOR.
 This calibration function is to the third power calculated with excel over calibration points (see xls file).
 Up to 1 cm accurate. Sometimes when signal not stable 2 cm accurate.
 Calibration is taken over 1 meter. You can calibrate with longer distances. Accordingly adjust the function in excel to pow ? .
@@ -44,6 +44,7 @@ Software VirtualAirPlot
 - In the software you can create a text file with the database points of approx 58.5 GB.
 - This can be imported on a table in POSTGRES.
 - Indexing the table and tuning the memory and some other parameters (in INI file) of the database make it possible to have a query time of 70 ms for some points with 1 000 000 000 rows.
+  Be sure you don't query to much rows so the tolerance can't be to big (pain point).
 - The software is using vectors of 1000 000 000 elements. To go bigger there are also alternatives like in Visual Studio to work with big data.
 
 - The software has a 3D view with sockets to the ANCHORS.
