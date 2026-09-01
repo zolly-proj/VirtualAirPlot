@@ -35,7 +35,7 @@ Calibration is taken over 1 meter. You can calibrate with longer distances. Acco
 
 
 
-Upcomming is the ANCHOR sending data to the ESP32 Wifi to transfer to a socket.
+Upcomming is the ANCHOR sending data to the ESP32 Wifi to transfer to a socket, this test phase is done (code in ino files).
 
 
 
