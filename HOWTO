@@ -25,3 +25,30 @@ passw: wolly
 sudo -u postgres dropdb TEST_PROJECT
 sudo -u postgres createdb --owner=wolly TEST_PROJECT
 import database into existing db
+
+This project is connected to the Anchor Arduino
+-----------------------------------------------
+TAG and ANCHOR are form the library's with calibration function added to the ANCHOR.
+This calibration function is to the third power calculated with excel over calibration points (see xls file).
+Up to 1 cm accurate. Sometimes when signal not stable 2 cm accurate.
+Calibration is taken over 1 meter. You can calibrate with longer distances. Accordingly adjust the function in excel to pow ? .
+
+
+
+Upcomming is the ANCHOR sending data to the ESP32 Wifi to transfer to a socket.
+
+
+
+Software VirtualAirPlot
+------------------------
+- In the software you can create a text file with the database points of approx 58.5 GB.
+- This can be imported on a table in POSTGRES.
+- Indexing the table and tuning the memory and some other parameters of the database make it possible to have a query time of 70 ms for some points with 1 000 000 000 rows.
+- The software is using vectors of 1000 000 000 elements. To go bigger there are also alternatives like in Visual Studio to work with big data.
+
+- The software has a 3D view with sockets to the ANCHORS.
+- This sockets send the distance data over the ESP32 to the computer on a wifi network.
+- Formula for calibration can be moved inside the software. Now it's in test on the Arduino code.
+
+- It uses a server from 2UVProject for the querying and the logserver from 2UVProject.
+- Finisching soon the software ... .
