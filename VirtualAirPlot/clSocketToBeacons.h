@@ -44,7 +44,7 @@ class clSocketToBeacons : public QTcpServer
 {
     Q_OBJECT
 public:
-    explicit clSocketToBeacons(clIceClientServer * paIceClientServer, clIceClientLogging *paIceClientLogging, QString paName, int paPort, QString paIp, int paCommunication_timer, QObject * parent = 0);
+    explicit clSocketToBeacons(clIceClientServer * paIceClientServer, clIceClientLogging *paIceClientLogging, QString paName, int paPort, QString paIp, int paCommunication_timer, QString paSensor_01_name, QString paSensor_02_name, QObject * parent = 0);
     ~clSocketToBeacons();
 
 	void StartServer();
@@ -58,6 +58,10 @@ private slots:
 private:
 	clIceClientLogging * meIceClientLogging;
 	clIceClientServer * meIceClientServer;
+	
+	QString meSensor_01_name;
+	QString meSensor_02_name;	
+	
 public:
 	QString convertDataFromSocket(QByteArray paByteArray);
 	int meSocketDescriptor;

@@ -1,6 +1,6 @@
 #include "clSocketToBeacons.h"
 
-clSocketToBeacons::clSocketToBeacons(clIceClientServer * paIceClientServer, clIceClientLogging *paIceClientLogging, QString paName, int paPort, QString paIp, int paCommunication_timer, QObject * parent)
+clSocketToBeacons::clSocketToBeacons(clIceClientServer * paIceClientServer, clIceClientLogging *paIceClientLogging, QString paName, int paPort, QString paIp, int paCommunication_timer, QString paSensor_01_name, QString paSensor_02_name, QObject * parent)
 {
     meIceClientServer = paIceClientServer;
 	meIceClientLogging = paIceClientLogging;
@@ -8,6 +8,8 @@ clSocketToBeacons::clSocketToBeacons(clIceClientServer * paIceClientServer, clIc
 	meName = paName;
 	meIp = paIp;
 	meCommunication_timer = paCommunication_timer;
+	meSensor_01_name = paSensor_01_name;
+	meSensor_02_name = paSensor_02_name;
 }
 
 clSocketToBeacons::~clSocketToBeacons()
@@ -48,7 +50,7 @@ void clSocketToBeacons::incomingConnection(qintptr socketDescriptor)
 {
 	meThread = NULL;
 	qDebug() << socketDescriptor << " Connecting...";
-	meThread = new clSocketToBeaconThread(socketDescriptor, meIceClientLogging,this);
+	meThread = new clSocketToBeaconThread(socketDescriptor, meIceClientLogging, meSensor_01_name, meSensor_02_name,this);
 	connect(meThread, SIGNAL(finished()), meThread, SLOT(deleteLater()));
 	connect(meThread, SIGNAL(dataReaded(float,QString,float,QString)), this, SLOT(transferData(float,QString,float,QString)));
 	meThread->start();

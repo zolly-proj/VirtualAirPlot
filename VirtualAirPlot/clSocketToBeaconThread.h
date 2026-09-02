@@ -31,7 +31,7 @@ class clSocketToBeaconThread : public QThread
 {
     Q_OBJECT;
 public:
-    explicit clSocketToBeaconThread(int iID , clIceClientLogging *paIceClientLogging,QObject *parent = 0);
+    explicit clSocketToBeaconThread(int iID , clIceClientLogging *paIceClientLogging, QString paSensor_01_name, QString paSensor_02_name, QObject *parent = 0);
     ~clSocketToBeaconThread ();
 
 	void run();
@@ -46,6 +46,10 @@ private:
     QTcpSocket *meSocket;
     int meSocketDescriptor;
 	clIceClientLogging * meIceClientLogging;
+	QString meSensor_01_name;
+	QString meSensor_02_name;
+	
+	
 public:
     float beacon_lenght_primary = 0;
     float beacon_lenght_secondary = 0;

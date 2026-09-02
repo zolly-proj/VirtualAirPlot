@@ -496,7 +496,7 @@ void clCubeReadValues::slotDoIt()
 		}
 		meIceClientLogging->insertItem("10",QString(QHostInfo::localHostName()),"VirtualAirPlot","clCubeReadValues::slotDoIt() -> Start query");
 
-		/* TODO
+		
 
 		bool loSensor01_readed = false;
 		bool loSensor02_readed = false;
@@ -649,10 +649,7 @@ void clCubeReadValues::slotDoIt()
 				createLineEntityPoints(rootEntity,loSensor01_X, loSensor01_Y, loSensor01_Z,loSensor02_X, loSensor02_Y, loSensor02_Z);
 			}
 		}
-		*/
-
-
-
+		
 	}
 	catch(exception &e)
 	{
@@ -1072,7 +1069,7 @@ void clCubeReadValues::verifyCheck_beacon01(bool checked)
 		{
 			if (checked)
 			{
-				meSocketToBeacon_beacon01 = new clSocketToBeacons(meIceClientServer, meIceClientLogging, myBeacon01.name, myBeacon01.port, myBeacon01.ip, myBeacon01.communication_timer, this);
+				meSocketToBeacon_beacon01 = new clSocketToBeacons(meIceClientServer, meIceClientLogging, myBeacon01.name, myBeacon01.port, myBeacon01.ip, myBeacon01.communication_timer, mySensor01.name, mySensor02.name, this);
 				meSocketToBeacon_beacon01->StartServer();
 				//connect(meWorkstationCycle[i], &clWorkstationCycle::resultReady, this, &clWorkstationCycles::handleResults);
 				//connect(meWorkstationCycle[i], &clWorkstationCycle::finished, meWorkstationCycle[i], &QObject::deleteLater);
@@ -1094,7 +1091,7 @@ void clCubeReadValues::verifyCheck_beacon02(bool checked)
 	{
 		if (checked)
 		{
-			meSocketToBeacon_beacon02 = new clSocketToBeacons(meIceClientServer, meIceClientLogging, myBeacon02.name, myBeacon02.port, myBeacon02.ip, myBeacon02.communication_timer, this);
+			meSocketToBeacon_beacon02 = new clSocketToBeacons(meIceClientServer, meIceClientLogging, myBeacon02.name, myBeacon02.port, myBeacon02.ip, myBeacon02.communication_timer, mySensor01.name, mySensor02.name, this);
 			meSocketToBeacon_beacon02->StartServer();
 			//connect(meWorkstationCycle[i], &clWorkstationCycle::resultReady, this, &clWorkstationCycles::handleResults);
 			//connect(meWorkstationCycle[i], &clWorkstationCycle::finished, meWorkstationCycle[i], &QObject::deleteLater);
@@ -1116,7 +1113,7 @@ void clCubeReadValues::verifyCheck_beacon03(bool checked)
 	{
 		if (checked)
 		{
-			meSocketToBeacon_beacon03 = new clSocketToBeacons(meIceClientServer, meIceClientLogging, myBeacon03.name, myBeacon03.port, myBeacon03.ip, myBeacon03.communication_timer, this);
+			meSocketToBeacon_beacon03 = new clSocketToBeacons(meIceClientServer, meIceClientLogging, myBeacon03.name, myBeacon03.port, myBeacon03.ip, myBeacon03.communication_timer,  mySensor01.name, mySensor02.name, this);
 			meSocketToBeacon_beacon03->StartServer();
 			//connect(meWorkstationCycle[i], &clWorkstationCycle::resultReady, this, &clWorkstationCycles::handleResults);
 			//connect(meWorkstationCycle[i], &clWorkstationCycle::finished, meWorkstationCycle[i], &QObject::deleteLater);

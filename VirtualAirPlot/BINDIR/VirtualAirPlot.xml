@@ -5,7 +5,7 @@
 		<port>1234</port>
 		<factor>0.5</factor>
 		<communication_timer>200</communication_timer>
-		<adress>BC-5C-D2-DD-E0-C2</adress>
+		<adress>01:01:01:01:01:01:01:01</adress>
 		<x>0</x>
 		<y>0</y>
 	</beacon_01>
@@ -16,7 +16,7 @@
 		<port>1235</port>
 		<factor>0.5</factor>
 		<communication_timer>200</communication_timer>
-		<adress>1C-5C-D2-DD-E0-C2</adress>
+		<adress>02:02:02:02:02:02:02:02</adress>
 		<x>1000</x>
 		<y>0</y>
 	</beacon_02>
@@ -26,22 +26,22 @@
 		<port>1236</port>
 		<factor>0.5</factor>
 		<communication_timer>200</communication_timer>
-		<adress>2C-5C-D2-DD-E0-C2</adress>
+		<adress>03:03:03:03:03:03:03:03</adress>
 		<x>0</x>
 		<y>1000</y>
 	</beacon_03>
 	<sensor_01>
-		<name>sensor_01</name>
+		<name>04:04:04:04:04:04:04:04</name>
 		<factor>0.5</factor>
 		<communication_timer>200</communication_timer>
-		<adress>8F-5C-D2-DD-E0-C2</adress>
+		<adress>04:04:04:04:04:04:04:04</adress>
 		<gpio_start>5</gpio_start>
 	</sensor_01>
 	<sensor_02>
-		<name>sensor_02</name>
+		<name>05:05:05:05:05:05:05:05</name>
 		<factor>0.5</factor>
 		<communication_timer>200</communication_timer>
-		<adress>8A-5C-D2-DD-E0-C2</adress>
+		<adress>05:05:05:05:05:05:05:05</adress>
 		<gpio_stop>4</gpio_stop>
 	</sensor_02>
 	<dim>

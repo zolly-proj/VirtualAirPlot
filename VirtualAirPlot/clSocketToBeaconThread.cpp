@@ -1,12 +1,16 @@
 #include "clSocketToBeaconThread.h"
 
-clSocketToBeaconThread::clSocketToBeaconThread(int paID, clIceClientLogging *paIceClientLogging, QObject * parent) : QThread(parent)
+clSocketToBeaconThread::clSocketToBeaconThread(int paID, clIceClientLogging *paIceClientLogging, QString paSensor_01_name, QString paSensor_02_name, QObject * parent) : QThread(parent)
 {
     try
     {		
 		this->meSocketDescriptor = paID;
 
 		meIceClientLogging = paIceClientLogging;
+		meSensor_01_name = paSensor_01_name;
+		meSensor_02_name = paSensor_02_name;
+		
+		
 		meSocket = new QTcpSocket(this);
 		connect(meSocket, SIGNAL(readyRead()), this, SLOT(readyReadSocket()));
 		connect(meSocket, SIGNAL(disconnected()), this, SLOT(disconnectedSocket()));
@@ -68,56 +72,67 @@ void clSocketToBeaconThread::readyReadSocket()
 			qDebug() << "Incomming data " << endl;
 			
 			QDomElement loDocElem = loDomDocument.documentElement();
+			QDomNode loRootNode = loDocElem.firstChild();
 			QDomNode loTablesNode = loDocElem.firstChild();
 
 			//example of xml communication
 			//<root><sensor_01 name="" lenght=""><sensor_02 name="" lenght="">
 			//<from>lmqskdjmlkfq</from><range>123.25</range><dBm>91.12</dBm>
-			while( !loTablesNode.isNull() )
+			while( !loRootNode.isNull())
 			{
-				if(loTablesNode.nodeName() == "sensor_01")
+				QDomElement loRootElemChild = loRootNode.toElement();				
+				QDomNode loTablesNode = loRootElemChild.firstChild();
+				
+				if(loTablesNode.nodeName() == "sensor")
 				{
 
 					QDomElement loDocElemChild = loTablesNode.toElement(); // try to convert the node to an element.
 					if( !loDocElemChild.isNull() )// the node was really an element.
-					{
+					{						
 						if (loDocElemChild.hasAttribute(QString("name")))
 						{
-
-							//QString loValue = loDocElemChild.attribute(paAttribute);
-							//paValue = &loValue;
-							beacon_name_primary = loDocElemChild.attribute("name");
-						}
-						if (loDocElemChild.hasAttribute(QString("lenght")))
-						{
-							//QString loValue = loDocElemChild.attribute(paAttribute);
-							//paValue = &loValue;
-							beacon_lenght_primary = loDocElemChild.attribute("lenght").toFloat();
+							if (QString(loDocElemChild.attribute("name")).compare(meSensor_01_name) == 0)
+							{
+								//QString loValue = loDocElemChild.attribute(paAttribute);
+								//paValue = &loValue;
+								beacon_name_primary = loDocElemChild.attribute("name");
+							
+								if (loDocElemChild.hasAttribute(QString("lenght")))
+								{
+									//QString loValue = loDocElemChild.attribute(paAttribute);
+									//paValue = &loValue;
+									beacon_lenght_primary = loDocElemChild.attribute("lenght").toFloat();
+								}
+							}
 						}
 					}
 				}
-				if(loTablesNode.nodeName() == "sensor_02")
+				
+				if(loTablesNode.nodeName() == "sensor")
 				{
 
 					QDomElement loDocElemChild = loTablesNode.toElement(); // try to convert the node to an element.
 					if( !loDocElemChild.isNull() )// the node was really an element.
-					{
+					{						
 						if (loDocElemChild.hasAttribute(QString("name")))
 						{
-
-							//QString loValue = loDocElemChild.attribute(paAttribute);
-							//paValue = &loValue;
-							beacon_name_secondary = loDocElemChild.attribute("name");
-						}
-						if (loDocElemChild.hasAttribute(QString("lenght")))
-						{
-							//QString loValue = loDocElemChild.attribute(paAttribute);
-							//paValue = &loValue;
-							beacon_lenght_secondary = loDocElemChild.attribute("lenght").toFloat();
+							if (QString(loDocElemChild.attribute("name")).compare(meSensor_02_name) == 0)
+							{
+								//QString loValue = loDocElemChild.attribute(paAttribute);
+								//paValue = &loValue;
+								beacon_name_secondary = loDocElemChild.attribute("name");
+						
+								if (loDocElemChild.hasAttribute(QString("lenght")))
+								{
+									//QString loValue = loDocElemChild.attribute(paAttribute);
+									//paValue = &loValue;
+									beacon_lenght_secondary = loDocElemChild.attribute("lenght").toFloat();
+								}
+							}
 						}
 					}
 				}
-				loTablesNode = loTablesNode.nextSibling();
+				loRootNode = loRootNode.nextSibling();
 			}
 
 			
