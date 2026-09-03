@@ -166,7 +166,11 @@ QString clSocketToBeaconThread::convertDataFromSocket(QByteArray paByteArray)
 		iter++;
 	}
 	fixed[index] = '\0';
-	return QString(fixed);
+	
+	QStringList loStringList = QString(fixed).split("</object>",QString::SkipEmptyParts);
+	
+	
+	return QString(loStringList.at(0) + QString("</object>"));
 }
 void clSocketToBeaconThread::disconnectedSocket()
 {

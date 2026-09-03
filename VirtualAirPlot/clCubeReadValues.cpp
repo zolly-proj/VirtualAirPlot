@@ -22,6 +22,7 @@ clCubeReadValues::clCubeReadValues(clIceClientServer * paIceClientServer, clIceC
 		connect(meCubeReadValues.chkBeacon_02, SIGNAL(toggled(bool)),this, SLOT(verifyCheck_beacon02(bool)));
 		connect(meCubeReadValues.chkBeacon_03, SIGNAL(toggled(bool)),this, SLOT(verifyCheck_beacon03(bool)));
 		connect(meCubeReadValues.btnRefresh, SIGNAL(clicked()),this,SLOT(slotButtonRefreshPressed()));
+		connect(meCubeReadValues.spbPow, SIGNAL(changed()),this,SLOT(slotPowChanged()));
 		//connect(meCubeInitialise.btnGenerate, SIGNAL(clicked()),this,SLOT(slotButtonGeneratePressed()));
 
 
@@ -496,6 +497,25 @@ void clCubeReadValues::slotDoIt()
 		}
 		meIceClientLogging->insertItem("10",QString(QHostInfo::localHostName()),"VirtualAirPlot","clCubeReadValues::slotDoIt() -> Start query");
 
+
+
+
+		//Recalculate according UWB lenght
+		int loPow = meCubeReadValues.spbPow->value();
+		if (loPow > 0 && meCubeReadValues.chkActive->isChecked())
+		{
+			//Calibrate lenghts
+			calibrateLenghts(	loLenght_beacon01_sensor01,
+								loLenght_beacon01_sensor02,
+								loLenght_beacon02_sensor01,
+								loLenght_beacon02_sensor02,
+								loLenght_beacon03_sensor01,
+								loLenght_beacon03_sensor02);
+		}
+		
+		//For the time beeing
+		loDoQuery = false;
+
 		
 
 		bool loSensor01_readed = false;
@@ -656,12 +676,96 @@ void clCubeReadValues::slotDoIt()
 		meIceClientLogging->insertItem("10",QString(QHostInfo::localHostName()),"VirtualAirPlot","clCubeReadValues::slotDoIt() -> " + QString(e.what()));
 	}
 }
+
+bool clCubeReadValues::calibrateLenghts(	float &paLenght_beacon01_sensor01,
+											float &paLenght_beacon01_sensor02,
+											float &paLenght_beacon02_sensor01,
+											float &paLenght_beacon02_sensor02,
+											float &paLenght_beacon03_sensor01,
+											float &paLenght_beacon03_sensor02)
+{
+    try
+    {
+
+		QStringList loConstantsList = meCubeReadValues.txtConstants->toPlainText().split(";");
+
+		float loLenght_beacon01_sensor01_temp;
+		float loLenght_beacon01_sensor02_temp;
+		float loLenght_beacon02_sensor01_temp;
+		float loLenght_beacon02_sensor02_temp;
+		float loLenght_beacon03_sensor01_temp;
+		float loLenght_beacon03_sensor02_temp;		
+
+
+		for (int j = 0; j < loConstantsList.size() - 2; j++)
+		{
+			loLenght_beacon01_sensor01_temp = loLenght_beacon01_sensor01_temp + (qPow(paLenght_beacon01_sensor01,(loConstantsList.size() - 1) - j) * loConstantsList.at(j).toFloat());
+			loLenght_beacon01_sensor02_temp = loLenght_beacon01_sensor02_temp + (qPow(paLenght_beacon01_sensor02,(loConstantsList.size() - 1) - j) * loConstantsList.at(j).toFloat());
+			loLenght_beacon02_sensor01_temp = loLenght_beacon02_sensor01_temp + (qPow(paLenght_beacon02_sensor01,(loConstantsList.size() - 1) - j) * loConstantsList.at(j).toFloat());
+			loLenght_beacon02_sensor02_temp = loLenght_beacon02_sensor02_temp + (qPow(paLenght_beacon02_sensor02,(loConstantsList.size() - 1) - j) * loConstantsList.at(j).toFloat());
+			loLenght_beacon03_sensor01_temp = loLenght_beacon03_sensor01_temp + (qPow(paLenght_beacon03_sensor01,(loConstantsList.size() - 1) - j) * loConstantsList.at(j).toFloat());
+			loLenght_beacon03_sensor02_temp = loLenght_beacon03_sensor02_temp + (qPow(paLenght_beacon03_sensor02,(loConstantsList.size() - 1) - j) * loConstantsList.at(j).toFloat());
+		}		
+		if (loConstantsList.size() != 0)
+		{
+			loLenght_beacon01_sensor01_temp = loLenght_beacon01_sensor01_temp + loConstantsList.at(loConstantsList.size() - 1).toFloat();
+			loLenght_beacon01_sensor02_temp = loLenght_beacon01_sensor02_temp + loConstantsList.at(loConstantsList.size() - 1).toFloat();
+			loLenght_beacon02_sensor01_temp = loLenght_beacon02_sensor01_temp + loConstantsList.at(loConstantsList.size() - 1).toFloat();
+			loLenght_beacon02_sensor02_temp = loLenght_beacon02_sensor02_temp + loConstantsList.at(loConstantsList.size() - 1).toFloat();
+			loLenght_beacon03_sensor01_temp = loLenght_beacon03_sensor01_temp + loConstantsList.at(loConstantsList.size() - 1).toFloat();
+			loLenght_beacon03_sensor02_temp = loLenght_beacon03_sensor02_temp + loConstantsList.at(loConstantsList.size() - 1).toFloat();
+		}
+		
+		paLenght_beacon01_sensor01 = loLenght_beacon01_sensor01_temp;
+		paLenght_beacon01_sensor02 = loLenght_beacon01_sensor02_temp;
+		paLenght_beacon02_sensor01 = loLenght_beacon02_sensor01_temp;
+		paLenght_beacon02_sensor02 = loLenght_beacon02_sensor02_temp;
+		paLenght_beacon03_sensor01 = loLenght_beacon03_sensor01_temp;
+		paLenght_beacon03_sensor02 = loLenght_beacon03_sensor02_temp;
+		
+		meIceClientLogging->insertItem("10",QString(QHostInfo::localHostName()),"VirtualAirPlot",QString("clCubeReadValues::calibrateLenghts -> Lenghts beacon 1 [%1 ; %2]").arg(QString::number(loLenght_beacon01_sensor01_temp)).arg(QString::number(loLenght_beacon01_sensor02_temp)));
+		meIceClientLogging->insertItem("10",QString(QHostInfo::localHostName()),"VirtualAirPlot",QString("clCubeReadValues::calibrateLenghts -> Lenghts beacon 2 [%1 ; %2]").arg(QString::number(loLenght_beacon02_sensor01_temp)).arg(QString::number(loLenght_beacon02_sensor02_temp)));
+		meIceClientLogging->insertItem("10",QString(QHostInfo::localHostName()),"VirtualAirPlot",QString("clCubeReadValues::calibrateLenghts -> Lenghts beacon 3 [%1 ; %2]").arg(QString::number(loLenght_beacon03_sensor01_temp)).arg(QString::number(loLenght_beacon03_sensor02_temp)));
+		
+
+		return true;
+    }
+    catch(exception &e)
+    {
+        meIceClientLogging->insertItem("10",QString(QHostInfo::localHostName()),"VirtualAirPlot","clCubeReadValues::calibrateLenghts -> " + QString(e.what()));
+		return false;
+    }
+}
+
 void clCubeReadValues::slotButtonRefreshPressed()
 {
     try
     {
 		readXMLfile();
 		fillForm();
+    }
+    catch(exception &e)
+    {
+        meIceClientLogging->insertItem("10",QString(QHostInfo::localHostName()),"VirtualAirPlot","clCubeReadValues::slotButtonRefreshPressed() -> " + QString(e.what()));
+    }
+}
+void clCubeReadValues::slotPowChanged()
+{
+    try
+    {
+		QString loConstants = "";
+		for (int i = 0; i < meCubeReadValues.spbPow->value(); i++)
+		{
+			if (loConstants.compare("") == 0)
+			{
+				loConstants = loConstants + QString("1");
+			}
+			else
+			{
+				loConstants = loConstants + QString(";1");
+			}
+		}
+		meCubeReadValues.txtConstants->setText(loConstants);
     }
     catch(exception &e)
     {
@@ -1051,7 +1155,9 @@ bool clCubeReadValues::fillForm()
 		meCubeReadValues.chkBeacon_02->setCheckState(Qt::Unchecked);
 		meCubeReadValues.chkBeacon_03->setCheckState(Qt::Unchecked);
 
-
+		meCubeReadValues.chkActive->setCheckState(Qt::Unchecked);
+		meCubeReadValues.spbPow->setValue(3);
+		meCubeReadValues.txtConstants->setText("0.2128;0.6879;0.096;0.0213");
 
 		meIceClientLogging->insertItem("10",QString(QHostInfo::localHostName()),"VirtualAirPlot","clCubeReadValues::fillForm() -> fill UI finisched");
 

@@ -5,6 +5,8 @@
 #include <string>
 #include <iostream>
 
+
+#include <QtCore/QtMath>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMdiArea>
 #include <QtWidgets/QFileDialog>
@@ -98,7 +100,7 @@ private slots:
     //Slots Camera setup
     void slotButtonRefreshPressed();
     void slotButtonGeneratePressed();
-
+    void slotPowChanged();
 public slots:
     void handleResults(const QString &);
     void verifyCheck_beacon01(bool checked);
@@ -112,6 +114,12 @@ private:
 	bool readXMLfile();
     bool fillForm();
     bool initialiseDisplayWidget();
+    bool calibrateLenghts(	float &paLenght_beacon01_sensor01,
+							float &paLenght_beacon01_sensor02,
+							float &paLenght_beacon02_sensor01,
+							float &paLenght_beacon02_sensor02,
+							float &paLenght_beacon03_sensor01,
+							float &paLenght_beacon03_sensor02);
 
     QString meConfigurationFile;
 
